@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASS}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: never
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    generate-ddl: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          app:
+            issuer-uri: "main-app"
+          google:
+            issuer-uri: "https://accounts.google.com"
+            jwk-set-uri: "https://www.googleapis.com/oauth2/v3/certs"
+          facebook:
+            issuer-uri: "https://facebook.com"
+            jwk-set-uri: "https://www.facebook.com/.well-known/oauth/openid/jwks/"
+          github:
+            issuer-uri: "https://token.actions.githubusercontent.com"
+            jwk-set-uri: "https://token.actions.githubusercontent.com/.well-known/jwks"
+
+variableA: "developer profile"

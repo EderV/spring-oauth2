@@ -1,0 +1,36 @@
+version: '3.8'
+name: demo-spring-compose
+
+services:
+
+  mysql:
+    image: mysql:8.2
+    container_name: mysql_container
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: mis-pelotas-33
+      MYSQL_DATABASE: demo-spring
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data_prod:/var/lib/mysql
+
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring_app_container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_URL: "jdbc:mysql://mysql:3306/demo-spring?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+      MYSQL_USER: root
+      MYSQL_PASS: mis-pelotas-33
+    command: /bin/bash
+
+volumes:
+  mysql_data_prod:
