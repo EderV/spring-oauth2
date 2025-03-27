@@ -8,7 +8,7 @@ services:
     container_name: mysql_container
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: mis-pelotas-33
+      MYSQL_ROOT_PASSWORD: MyrootP@swoord1!
       MYSQL_DATABASE: demo-spring
       MYSQL_USER: user
       MYSQL_PASSWORD: pass
@@ -29,7 +29,7 @@ services:
     environment:
       MYSQL_URL: "jdbc:mysql://mysql:3306/demo-spring?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
       MYSQL_USER: root
-      MYSQL_PASS: mis-pelotas-33
+      MYSQL_PASS: MyrootP@swoord1!
     command: /bin/bash
 
 volumes:
