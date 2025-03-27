@@ -1,13 +1,14 @@
 package com.evm.oauth2.application.jwt;
 
 import com.evm.oauth2.domain.interfaces.KeyGenerator;
+import com.evm.oauth2.domain.ports.out.FileSystemPort;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.security.*;
 import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
@@ -17,6 +18,7 @@ import java.util.Objects;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtKeyGenerator implements KeyGenerator {
 
     private final String jwtKeysPath = "jwt-keys";
@@ -24,6 +26,8 @@ public class JwtKeyGenerator implements KeyGenerator {
     private final String privateJwtKeyPath = "jwt-keys/private.key";
 
     private KeyPair accessTokenKeyPair;
+
+    private final FileSystemPort fileSystemPort;
 
     @Override
     public Key getPublicKey() {
@@ -45,19 +49,19 @@ public class JwtKeyGenerator implements KeyGenerator {
     private KeyPair getKeyPair(String publicKeyPath, String privateKeyPath) {
         KeyPair keyPair;
 
-        File publicKeyFile = new File(publicKeyPath);
-        File privateKeyFile = new File(privateKeyPath);
+        File publicKeyFile = fileSystemPort.newfile(publicKeyPath);
+        File privateKeyFile = fileSystemPort.newfile(privateKeyPath);
 
         if (publicKeyFile.exists() && privateKeyFile.exists()) {
             log.info("Loading keys from file: {}, {}", publicKeyPath, privateKeyPath);
             try {
                 KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
-                byte[] publicKeyBytes = Files.readAllBytes(publicKeyFile.toPath());
+                byte[] publicKeyBytes = fileSystemPort.readAllBytes(publicKeyFile.toPath());
                 EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
                 PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
-                byte[] privateKeyBytes = Files.readAllBytes(privateKeyFile.toPath());
+                byte[] privateKeyBytes = fileSystemPort.readAllBytes(privateKeyFile.toPath());
                 PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
                 PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
 
@@ -68,7 +72,7 @@ public class JwtKeyGenerator implements KeyGenerator {
             }
         }
 
-        File directory = new File(jwtKeysPath);
+        File directory = fileSystemPort.newfile(jwtKeysPath);
         if (!directory.exists()) {
             directory.mkdirs();
         }
