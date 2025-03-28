@@ -26,4 +26,10 @@ spring:
             issuer-uri: "https://token.actions.githubusercontent.com"
             jwk-set-uri: "https://token.actions.githubusercontent.com/.well-known/jwks"
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
 variableA: "developer profile"

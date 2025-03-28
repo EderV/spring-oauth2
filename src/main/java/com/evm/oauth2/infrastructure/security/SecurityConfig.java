@@ -6,11 +6,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.config.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -21,6 +23,7 @@ public class SecurityConfig {
 
     private final JwtDecoder jwtDecoder;
     private final Converter<Jwt, AbstractAuthenticationToken> jwtConverter;
+
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
@@ -28,6 +31,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/home", "/error").permitAll()
+                        .requestMatchers("/api/auth/private").hasAnyRole("ADMIN")
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -40,18 +44,15 @@ public class SecurityConfig {
                                         jwtConfigurer.jwtAuthenticationConverter(jwtConverter);
                                     }
                             );
-                            oauth2.authenticationEntryPoint(authenticationEntryPoint);
-                            oauth2.accessDeniedHandler((request, response, accessDeniedException) -> {
-                                log.error("Access denied handler: {}", accessDeniedException.getMessage());
+                            oauth2.withObjectPostProcessor(new ObjectPostProcessor<BearerTokenAuthenticationFilter>() {
+                                @Override
+                                public <O extends BearerTokenAuthenticationFilter> O postProcess(O object) {
+                                    object.setAuthenticationFailureHandler(authenticationEntryPoint::commence);
+                                    return object;
+                                }
                             });
                         }
                 )
-                .exceptionHandling(exception -> {
-                        exception.accessDeniedHandler((request, response, accessDeniedException) -> {
-                            log.error("Access denied handleraaaaaaaaaaa: {}", accessDeniedException.getMessage());
-                        });
-                        exception.authenticationEntryPoint(authenticationEntryPoint);
-                })
                 .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();

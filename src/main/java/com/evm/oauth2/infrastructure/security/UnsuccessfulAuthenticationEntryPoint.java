@@ -20,7 +20,7 @@ public class UnsuccessfulAuthenticationEntryPoint implements AuthenticationEntry
             HttpServletResponse response,
             AuthenticationException authException
     ) throws IOException {
-        log.error("aaaaaaaaaaaaaaaaaaaaaaaa {}", authException.getMessage());
+        log.error("Authentication error. Message: {}", authException.getMessage());
 
         response.addHeader("WWW-Authenticate", authException.getMessage());
         response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
