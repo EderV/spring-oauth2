@@ -19,23 +19,25 @@ public class AuthConverter implements Converter<Jwt, AbstractAuthenticationToken
 
     @Override
     public AbstractAuthenticationToken convert(Jwt source) {
-        var issuer = (String) source.getClaims().get("iss");
+        throw new OAuth2AuthenticationException("aaaaaaaaaaaaaaaaaaa");
 
-        if (issuer.equals(jwtIssuerConfig.getApp().getIssuerUri())) {
-            var user = authServicePort.validateUserLocallyIssued(source.getSubject());
-            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-        }
-
-        String email = (String) source.getClaims().getOrDefault("email", "");
-        String username = (String) source.getClaims().getOrDefault("name", "");
-
-        if (email.isBlank() || username.isBlank()) {
-            throw new OAuth2AuthenticationException(
-                    "Email or Name are invalid in the JWT. Email: " + email + " - Name: " + username);
-        }
-
-        var user = authServicePort.validateUserExternallyIssued(email, username, issuer);
-        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+//        var issuer = (String) source.getClaims().get("iss");
+//
+//        if (issuer.equals(jwtIssuerConfig.getApp().getIssuerUri())) {
+//            var user = authServicePort.validateUserLocallyIssued(source.getSubject());
+//            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+//        }
+//
+//        String email = (String) source.getClaims().getOrDefault("email", "");
+//        String username = (String) source.getClaims().getOrDefault("name", "");
+//
+//        if (email.isBlank() || username.isBlank()) {
+//            throw new OAuth2AuthenticationException(
+//                    "Email or Name are invalid in the JWT. Email: " + email + " - Name: " + username);
+//        }
+//
+//        var user = authServicePort.validateUserExternallyIssued(email, username, issuer);
+//        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 
 }

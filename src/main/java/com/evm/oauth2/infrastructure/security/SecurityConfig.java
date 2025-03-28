@@ -1,6 +1,7 @@
 package com.evm.oauth2.infrastructure.security;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -10,14 +11,17 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtDecoder jwtDecoder;
     private final Converter<Jwt, AbstractAuthenticationToken> jwtConverter;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,13 +34,24 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(jwtConfigurer -> {
-                                    jwtConfigurer.decoder(jwtDecoder);
-                                    jwtConfigurer.jwtAuthenticationConverter(jwtConverter);
-                                }
-                        )
+                .oauth2ResourceServer(oauth2 -> {
+                            oauth2.jwt(jwtConfigurer -> {
+                                        jwtConfigurer.decoder(jwtDecoder);
+                                        jwtConfigurer.jwtAuthenticationConverter(jwtConverter);
+                                    }
+                            );
+                            oauth2.authenticationEntryPoint(authenticationEntryPoint);
+                            oauth2.accessDeniedHandler((request, response, accessDeniedException) -> {
+                                log.error("Access denied handler: {}", accessDeniedException.getMessage());
+                            });
+                        }
                 )
+                .exceptionHandling(exception -> {
+                        exception.accessDeniedHandler((request, response, accessDeniedException) -> {
+                            log.error("Access denied handleraaaaaaaaaaa: {}", accessDeniedException.getMessage());
+                        });
+                        exception.authenticationEntryPoint(authenticationEntryPoint);
+                })
                 .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
