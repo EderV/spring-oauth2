@@ -13,9 +13,9 @@
 
     <groupId>com.evm</groupId>
     <artifactId>demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
-    <description>demo</description>
+    <version>1.0.0</version>
+    <name>spring-oauth2</name>
+    <description>Spring Oauth2 resource server for validating JWT</description>
     <url/>
 
     <licenses>
@@ -115,6 +115,7 @@
     </dependencies>
 
     <build>
+        <finalName>spring-oauth2-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

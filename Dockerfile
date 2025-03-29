@@ -6,8 +6,13 @@ COPY . .
 
 RUN ./mvnw clean package -P dev -D skipTests
 
-RUN mkdir /app
-RUN cp ./target/demo-0.0.1-SNAPSHOT.jar /app/app.jar
+#RUN VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout | tail -n 1)
+#RUN mkdir /app && cp ./target/spring-oauth2-${VERSION}.jar /app/app.jar
+
+RUN mkdir /app && \
+    VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout | tail -n 1) && \
+    echo "Building version ${VERSION}" && \
+    cp ./target/spring-oauth2-${VERSION}.jar /app/app.jar
 
 WORKDIR /app
 

@@ -20,5 +20,9 @@ public class DemoApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         log.info("Variable A: {}", variableA);
+
+        log.error("DB url: {}", System.getenv("MYSQL_URL"));
+        log.error("DB user: {}", System.getenv("MYSQL_USER"));
+        log.error("DB password: {}", System.getenv("MYSQL_PASS"));
     }
 }

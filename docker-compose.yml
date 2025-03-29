@@ -14,6 +14,11 @@ services:
       MYSQL_PASSWORD: pass
     ports:
       - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - mysql_data_prod:/var/lib/mysql
 
@@ -25,7 +30,9 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+
     environment:
       MYSQL_URL: "jdbc:mysql://mysql:3306/demo-spring?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
       MYSQL_USER: root

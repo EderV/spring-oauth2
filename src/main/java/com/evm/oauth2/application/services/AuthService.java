@@ -44,15 +44,7 @@ public class AuthService implements AuthServicePort {
         var username = registration.getUsername();
         var password = registration.getPassword();
 
-        var userByEmail = userRepositoryPort.getUserFromEmail(email);
-        if (userByEmail != null) {
-            throw new UserAlreadyRegisteredException("Email " + email + " already exists");
-        }
-
-        var userByUsername = userRepositoryPort.getUserFromUsername(username);
-        if (userByUsername != null) {
-            throw new UserAlreadyRegisteredException("Username " + username + " already exists");
-        }
+        checkNewUser(email, username);
 
         var user = createUserEntity(email, username, password);
         userRepositoryPort.saveUser(user);
@@ -75,6 +67,17 @@ public class AuthService implements AuthServicePort {
         return userRepositoryPort.saveUser(newUser);
     }
 
+    private void checkNewUser(String email, String username) throws UserAlreadyRegisteredException {
+        var userByEmail = userRepositoryPort.getUserFromEmail(email);
+        if (userByEmail != null) {
+            throw new UserAlreadyRegisteredException("Email " + email + " already exists");
+        }
+
+        var userByUsername = userRepositoryPort.getUserFromUsername(username);
+        if (userByUsername != null) {
+            throw new UserAlreadyRegisteredException("Username " + username + " already exists");
+        }
+    }
 
     private User createUserEntity(String email, String username, String password) {
         var user = new User();
