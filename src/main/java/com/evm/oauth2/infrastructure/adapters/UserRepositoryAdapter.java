@@ -35,6 +35,11 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
         return userEntity.map(this::toUser).orElse(null);
     }
 
+    @Override
+    public void deleteAll() {
+        userRepository.deleteAll();
+    }
+
     private User toUser(UserEntity userEntity) {
         return UserMapper.MAPPER.toUser(userEntity);
     }

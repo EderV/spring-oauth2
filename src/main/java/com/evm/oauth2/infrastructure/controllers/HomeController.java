@@ -1,25 +1,22 @@
 package com.evm.oauth2.infrastructure.controllers;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
+@RequestMapping("/api/v1/home")
 public class HomeController {
 
-    // Public endpoint
-    @GetMapping("/home")
-    public String home() {
-        return "Welcome to the public homepage!";
+    @GetMapping()
+    public String home(@AuthenticationPrincipal UserDetails userDetails) {
+        return "Hello " + userDetails.getUsername() + ". You are an authenticated user";
     }
 
-    // Secured endpoint: returns user attributes
-    @GetMapping("/user")
-    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
-        // Spring Security injects the OAuth2User after successful authentication.
-        return principal.getAttributes();
+    @GetMapping("/admin")
+    public String user(@AuthenticationPrincipal UserDetails userDetails) {
+        return "Hello " + userDetails.getUsername() + ". You have ROLE_ADMIN!";
     }
 }

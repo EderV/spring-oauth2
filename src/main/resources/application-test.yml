@@ -1,0 +1,12 @@
+spring:
+  sql:
+    init:
+      mode: never
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    generate-ddl: false
+
+logging:
+  level:
+    org:
+      springframework: DEBUG

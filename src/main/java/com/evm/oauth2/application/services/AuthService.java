@@ -46,7 +46,7 @@ public class AuthService implements AuthServicePort {
 
         checkNewUser(email, username);
 
-        var user = createUserEntity(email, username, password);
+        var user = createUser(email, username, password);
         userRepositoryPort.saveUser(user);
     }
 
@@ -62,7 +62,7 @@ public class AuthService implements AuthServicePort {
 
         if (user != null) return user;
 
-        var newUser = createUserEntity(email, username, "");
+        var newUser = createUser(email, username, "");
         newUser.setLoginIssuer(issuer);
         return userRepositoryPort.saveUser(newUser);
     }
@@ -79,7 +79,7 @@ public class AuthService implements AuthServicePort {
         }
     }
 
-    private User createUserEntity(String email, String username, String password) {
+    private User createUser(String email, String username, String password) {
         var user = new User();
         user.setEmail(email);
         user.setUsername(username);

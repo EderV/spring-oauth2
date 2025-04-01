@@ -10,26 +10,12 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     generate-ddl: false
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          app:
-            issuer-uri: "main-app"
-          google:
-            issuer-uri: "https://accounts.google.com"
-            jwk-set-uri: "https://www.googleapis.com/oauth2/v3/certs"
-          facebook:
-            issuer-uri: "https://facebook.com"
-            jwk-set-uri: "https://www.facebook.com/.well-known/oauth/openid/jwks/"
-          github:
-            issuer-uri: "https://token.actions.githubusercontent.com"
-            jwk-set-uri: "https://token.actions.githubusercontent.com/.well-known/jwks"
+  flyway:
+    placeholders:
+      onUpdateClause: ON UPDATE CURRENT_TIMESTAMP
 
 logging:
   level:
     org:
       springframework:
         security: DEBUG
-
-variableA: "developer profile"

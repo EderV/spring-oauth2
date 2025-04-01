@@ -7,5 +7,6 @@ public interface UserRepositoryPort {
     User saveUser(User user);
     User getUserFromUsername(String username);
     User getUserFromEmail(String email);
+    void deleteAll();
 
 }

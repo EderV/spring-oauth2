@@ -15,14 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -54,15 +51,6 @@ public class AuthController {
         authServicePort.registerUser(registration);
 
         return new ResponseEntity<>("User registered in DB", HttpStatus.CREATED);
-    }
-
-    @GetMapping("/private")
-    public ResponseEntity<String> privateEndpoint(@AuthenticationPrincipal UserDetails userDetails) {
-        var a = SecurityContextHolder.getContext();
-
-//        log.warn("Principal {}", principal.getName());
-
-        return ResponseEntity.ok("OK");
     }
 
     private Credentials toCredentials(CredentialsRequest credentialsRequest) {

@@ -5,6 +5,22 @@ spring:
     active: @profile.active@
   config:
     import: optional:file:.env[.properties]
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          app:
+            issuer-uri: "main-app"
+          google:
+            issuer-uri: "https://accounts.google.com"
+            jwk-set-uri: "https://www.googleapis.com/oauth2/v3/certs"
+          facebook:
+            issuer-uri: "https://facebook.com"
+            jwk-set-uri: "https://www.facebook.com/.well-known/oauth/openid/jwks/"
+          github:
+            issuer-uri: "https://token.actions.githubusercontent.com"
+            jwk-set-uri: "https://token.actions.githubusercontent.com/.well-known/jwks"
+
 logging:
   file:
     name: log/file.log
