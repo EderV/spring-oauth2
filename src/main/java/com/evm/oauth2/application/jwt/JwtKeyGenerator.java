@@ -1,7 +1,7 @@
 package com.evm.oauth2.application.jwt;
 
 import com.evm.oauth2.domain.interfaces.KeyGenerator;
-import com.evm.oauth2.domain.ports.out.FileSystemPort;
+import com.evm.oauth2.domain.interfaces.FileSystem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class JwtKeyGenerator implements KeyGenerator {
 
     private KeyPair accessTokenKeyPair;
 
-    private final FileSystemPort fileSystemPort;
+    private final FileSystem fileSystem;
 
     @Override
     public Key getPublicKey() {
@@ -49,19 +49,19 @@ public class JwtKeyGenerator implements KeyGenerator {
     private KeyPair getKeyPair(String publicKeyPath, String privateKeyPath) {
         KeyPair keyPair;
 
-        File publicKeyFile = fileSystemPort.newfile(publicKeyPath);
-        File privateKeyFile = fileSystemPort.newfile(privateKeyPath);
+        File publicKeyFile = fileSystem.newfile(publicKeyPath);
+        File privateKeyFile = fileSystem.newfile(privateKeyPath);
 
         if (publicKeyFile.exists() && privateKeyFile.exists()) {
             log.info("Loading keys from file: {}, {}", publicKeyPath, privateKeyPath);
             try {
                 KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
-                byte[] publicKeyBytes = fileSystemPort.readAllBytes(publicKeyFile.toPath());
+                byte[] publicKeyBytes = fileSystem.readAllBytes(publicKeyFile.toPath());
                 EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
                 PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 
-                byte[] privateKeyBytes = fileSystemPort.readAllBytes(privateKeyFile.toPath());
+                byte[] privateKeyBytes = fileSystem.readAllBytes(privateKeyFile.toPath());
                 PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
                 PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
 
@@ -72,7 +72,7 @@ public class JwtKeyGenerator implements KeyGenerator {
             }
         }
 
-        File directory = fileSystemPort.newfile(jwtKeysPath);
+        File directory = fileSystem.newfile(jwtKeysPath);
         if (!directory.exists()) {
             directory.mkdirs();
         }

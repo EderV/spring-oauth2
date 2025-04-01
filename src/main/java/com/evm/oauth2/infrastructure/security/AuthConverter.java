@@ -1,6 +1,6 @@
 package com.evm.oauth2.infrastructure.security;
 
-import com.evm.oauth2.domain.ports.in.AuthServicePort;
+import com.evm.oauth2.domain.interfaces.AuthService;
 import com.evm.oauth2.infrastructure.configuration.JwtIssuerConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    private final AuthServicePort authServicePort;
+    private final AuthService authService;
     private final JwtIssuerConfig jwtIssuerConfig;
 
     @Override
@@ -22,7 +22,7 @@ public class AuthConverter implements Converter<Jwt, AbstractAuthenticationToken
         var issuer = (String) source.getClaims().get("iss");
 
         if (issuer.equals(jwtIssuerConfig.getApp().getIssuerUri())) {
-            var user = authServicePort.validateUserLocallyIssued(source.getSubject());
+            var user = authService.validateUserLocallyIssued(source.getSubject());
             return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         }
 
@@ -34,7 +34,7 @@ public class AuthConverter implements Converter<Jwt, AbstractAuthenticationToken
                     "Email or Name are invalid in the JWT. Email: " + email + " - Name: " + username);
         }
 
-        var user = authServicePort.validateUserExternallyIssued(email, username, issuer);
+        var user = authService.validateUserExternallyIssued(email, username, issuer);
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 

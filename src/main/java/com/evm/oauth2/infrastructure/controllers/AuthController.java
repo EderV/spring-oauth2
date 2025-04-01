@@ -3,7 +3,7 @@ package com.evm.oauth2.infrastructure.controllers;
 import com.evm.oauth2.domain.models.AccessJwt;
 import com.evm.oauth2.domain.models.Credentials;
 import com.evm.oauth2.domain.models.Registration;
-import com.evm.oauth2.domain.ports.in.AuthServicePort;
+import com.evm.oauth2.domain.interfaces.AuthService;
 import com.evm.oauth2.infrastructure.dto.request.CredentialsRequest;
 import com.evm.oauth2.infrastructure.dto.request.RegistrationRequest;
 import com.evm.oauth2.infrastructure.dto.response.AccessJwtResponse;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthServicePort authServicePort;
+    private final AuthService authService;
 
     @GetMapping
     public ResponseEntity<String> test() {
@@ -36,7 +36,7 @@ public class AuthController {
 
         var credentials = toCredentials(credentialsRequest);
 
-        var accessJwt = authServicePort.login(credentials);
+        var accessJwt = authService.login(credentials);
         var response = toAccessJwtResponse(accessJwt);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -48,7 +48,7 @@ public class AuthController {
 
         var registration = toRegistration(registrationRequest);
 
-        authServicePort.registerUser(registration);
+        authService.registerUser(registration);
 
         return new ResponseEntity<>("User registered in DB", HttpStatus.CREATED);
     }

@@ -1,10 +1,9 @@
 package com.evm.oauth2.infrastructure.adapters;
 
 import com.evm.oauth2.domain.models.User;
-import com.evm.oauth2.domain.ports.out.UserRepositoryPort;
+import com.evm.oauth2.domain.interfaces.UserRepository;
 import com.evm.oauth2.infrastructure.dto.entities.UserEntity;
 import com.evm.oauth2.infrastructure.mappers.UserMapper;
-import com.evm.oauth2.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -12,9 +11,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class UserRepositoryAdapter implements UserRepositoryPort {
+public class UserRepositoryAdapter implements UserRepository {
 
-    private final UserRepository userRepository;
+    private final com.evm.oauth2.infrastructure.repository.UserRepository userRepository;
 
     @Override
     public User saveUser(User user) {

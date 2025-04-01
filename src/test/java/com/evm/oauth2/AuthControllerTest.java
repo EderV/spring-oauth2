@@ -1,6 +1,6 @@
 package com.evm.oauth2;
 
-import com.evm.oauth2.domain.ports.out.UserRepositoryPort;
+import com.evm.oauth2.domain.interfaces.UserRepository;
 import com.evm.oauth2.infrastructure.dto.request.CredentialsRequest;
 import com.evm.oauth2.infrastructure.dto.request.RegistrationRequest;
 import com.evm.oauth2.infrastructure.dto.response.AccessJwtResponse;
@@ -35,7 +35,7 @@ public class AuthControllerTest extends AbstractIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private UserRepositoryPort userRepositoryPort;
+    private UserRepository userRepository;
 
     @Test
     @Order(10)
@@ -52,7 +52,7 @@ public class AuthControllerTest extends AbstractIntegrationTest {
                         .content(jsonRequest))
                 .andExpect(status().isCreated());
 
-        var savedUser = userRepositoryPort.getUserFromUsername("testUser");
+        var savedUser = userRepository.getUserFromUsername("testUser");
         assertNotNull(savedUser);
     }
 

@@ -2,7 +2,7 @@ package com.evm.oauth2;
 
 import com.evm.oauth2.domain.models.Role;
 import com.evm.oauth2.domain.models.User;
-import com.evm.oauth2.domain.ports.out.UserRepositoryPort;
+import com.evm.oauth2.domain.interfaces.UserRepository;
 import com.evm.oauth2.infrastructure.dto.request.CredentialsRequest;
 import com.evm.oauth2.infrastructure.dto.response.AccessJwtResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,14 +36,14 @@ public class HomeControllerTest extends AbstractIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private UserRepositoryPort userRepositoryPort;
+    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void beforeEach() {
-        userRepositoryPort.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -59,7 +59,7 @@ public class HomeControllerTest extends AbstractIntegrationTest {
     @Order(20)
     public void get_shouldReturnOk() throws Exception {
         User user = createUser();
-        userRepositoryPort.saveUser(user);
+        userRepository.saveUser(user);
 
         CredentialsRequest request = new CredentialsRequest();
         request.setUsername(testUsername);
@@ -86,7 +86,7 @@ public class HomeControllerTest extends AbstractIntegrationTest {
     @Order(30)
     public void getAdmin_shouldReturnForbidden_userDoesNotHaveADMIN() throws Exception {
         User user = createUser();
-        userRepositoryPort.saveUser(user);
+        userRepository.saveUser(user);
 
         CredentialsRequest request = new CredentialsRequest();
         request.setUsername(testUsername);
@@ -119,7 +119,7 @@ public class HomeControllerTest extends AbstractIntegrationTest {
 
         User user = createUser();
         user.setRoles(List.of(roleUser, roleAdmin));
-        userRepositoryPort.saveUser(user);
+        userRepository.saveUser(user);
 
         CredentialsRequest request = new CredentialsRequest();
         request.setUsername(testUsername);

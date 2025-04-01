@@ -1,8 +1,8 @@
-package com.evm.oauth2.domain.ports.out;
+package com.evm.oauth2.domain.interfaces;
 
 import com.evm.oauth2.domain.models.User;
 
-public interface UserRepositoryPort {
+public interface UserRepository {
 
     User saveUser(User user);
     User getUserFromUsername(String username);

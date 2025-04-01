@@ -1,6 +1,6 @@
 package com.evm.oauth2.infrastructure.adapters;
 
-import com.evm.oauth2.domain.ports.out.FileSystemPort;
+import com.evm.oauth2.domain.interfaces.FileSystem;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Component
-public class FileSystemAdapter implements FileSystemPort {
+public class FileSystemAdapter implements FileSystem {
 
 
     @Override

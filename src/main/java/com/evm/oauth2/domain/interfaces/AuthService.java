@@ -1,4 +1,4 @@
-package com.evm.oauth2.domain.ports.in;
+package com.evm.oauth2.domain.interfaces;
 
 import com.evm.oauth2.domain.exceptions.UserAlreadyRegisteredException;
 import com.evm.oauth2.domain.models.AccessJwt;
@@ -7,7 +7,7 @@ import com.evm.oauth2.domain.models.Registration;
 import com.evm.oauth2.domain.models.User;
 import org.springframework.security.core.AuthenticationException;
 
-public interface AuthServicePort {
+public interface AuthService {
 
     AccessJwt login(Credentials credentials) throws AuthenticationException;
     void registerUser(Registration registration) throws UserAlreadyRegisteredException;

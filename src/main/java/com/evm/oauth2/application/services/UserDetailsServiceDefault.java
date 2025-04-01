@@ -1,6 +1,6 @@
 package com.evm.oauth2.application.services;
 
-import com.evm.oauth2.domain.ports.out.UserRepositoryPort;
+import com.evm.oauth2.domain.interfaces.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserDetailsServiceDefault implements UserDetailsService {
 
-    private final UserRepositoryPort userRepositoryPort;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepositoryPort.getUserFromUsername(username);
+        return userRepository.getUserFromUsername(username);
     }
 
 }
