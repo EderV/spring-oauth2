@@ -40,7 +40,7 @@ A Spring Boot application that serves as an OAuth2 resource server, capable of a
 
 ## Endpoints
 - **Authentication endpoints**
-  - /api/v1/auth/**: Public endpoints for user authentication and token generation.
+  - `/api/v1/auth/**`: Public endpoints for user authentication and token generation.
 - **Protected endpoints**
-  - /api/v1/home/admin: Accessible only to users with the ADMIN role.
-  - /api/v1/home: Accessible only to users with the USER role.
+  - `/api/v1/home/admin`: Accessible only to users with the ADMIN role.
+  - `/api/v1/home`: Accessible only to users with the USER role.
