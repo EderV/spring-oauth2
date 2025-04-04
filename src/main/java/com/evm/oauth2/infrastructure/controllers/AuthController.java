@@ -48,7 +48,10 @@ public class AuthController {
 
         var registration = toRegistration(registrationRequest);
 
-        authService.registerUser(registration);
+        var res = authService.registerUser(registration);
+        if (res.getErrorMsg() != null) {
+            return new ResponseEntity<>(res.getErrorMsg(), HttpStatus.CONFLICT);
+        }
 
         return new ResponseEntity<>("User registered in DB", HttpStatus.CREATED);
     }

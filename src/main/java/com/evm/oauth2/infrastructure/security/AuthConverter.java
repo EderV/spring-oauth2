@@ -34,7 +34,12 @@ public class AuthConverter implements Converter<Jwt, AbstractAuthenticationToken
                     "Email or Name are invalid in the JWT. Email: " + email + " - Name: " + username);
         }
 
-        var user = authService.validateUserExternallyIssued(email, username, issuer);
+        var validationRes = authService.validateUserExternallyIssued(email, username, issuer);
+        if (validationRes.getErrorMsg() != null) {
+            throw new OAuth2AuthenticationException(validationRes.getErrorMsg());
+        }
+
+        var user = validationRes.getData();
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 

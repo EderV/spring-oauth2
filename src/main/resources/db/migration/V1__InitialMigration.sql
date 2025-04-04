@@ -10,7 +10,9 @@ CREATE TABLE user
     account_locked          BOOLEAN             NOT NULL,
     credentials_expired     BOOLEAN             NOT NULL,
     created_at              DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at              DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at              DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT unique_username UNIQUE (username),
+    CONSTRAINT unique_email UNIQUE (email)
 );
 
 CREATE TABLE role

@@ -1,10 +1,11 @@
 package com.evm.oauth2.application.services;
 
 import com.evm.oauth2.domain.exceptions.UserAlreadyRegisteredException;
-import com.evm.oauth2.domain.interfaces.TokenGenerator;
-import com.evm.oauth2.domain.models.*;
 import com.evm.oauth2.domain.interfaces.AuthService;
+import com.evm.oauth2.domain.interfaces.TokenGenerator;
 import com.evm.oauth2.domain.interfaces.UserRepository;
+import com.evm.oauth2.domain.models.*;
+import com.evm.oauth2.domain.models.responses.DatabaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,15 +40,13 @@ public class AuthServiceDefault implements AuthService {
     }
 
     @Override
-    public void registerUser(Registration registration) throws UserAlreadyRegisteredException {
+    public DatabaseResponse<User> registerUser(Registration registration) throws UserAlreadyRegisteredException {
         var email = registration.getEmail();
         var username = registration.getUsername();
         var password = registration.getPassword();
 
-        checkNewUser(email, username);
-
         var user = createUser(email, username, password);
-        userRepository.saveUser(user);
+        return userRepository.saveUser(user);
     }
 
     @Override
@@ -56,27 +55,19 @@ public class AuthServiceDefault implements AuthService {
     }
 
     @Override
-    public User validateUserExternallyIssued(String email, String username, String issuer) {
+    public DatabaseResponse<User> validateUserExternallyIssued(String email, String username, String issuer) {
         // Check if the user is in the database
         var user = userRepository.getUserFromUsername(username);
 
-        if (user != null) return user;
+        if (user != null) {
+            var response = new DatabaseResponse<User>();
+            response.setData(user);
+            return response;
+        }
 
         var newUser = createUser(email, username, "");
         newUser.setLoginIssuer(issuer);
         return userRepository.saveUser(newUser);
-    }
-
-    private void checkNewUser(String email, String username) throws UserAlreadyRegisteredException {
-        var userByEmail = userRepository.getUserFromEmail(email);
-        if (userByEmail != null) {
-            throw new UserAlreadyRegisteredException("Email " + email + " already exists");
-        }
-
-        var userByUsername = userRepository.getUserFromUsername(username);
-        if (userByUsername != null) {
-            throw new UserAlreadyRegisteredException("Username " + username + " already exists");
-        }
     }
 
     private User createUser(String email, String username, String password) {
